@@ -127,12 +127,14 @@ public :
 
 			m_wServerPort = (WORD)::GetPrivateProfileInt(TEXT("General"), TEXT("ServerPort"), m_wServerPort, m_szConfigPath);
 
+			// サービスのステータスを明示的に RUNNING（実行中）に設定
+			SetServiceStatus(SERVICE_RUNNING);
+
 			// ここにサービスの初期化に必要な処理を書きます
 			m_CasServer.OpenServer(m_wServerPort);
+			LogEvent(TEXT("BonCasServiceは正常に開始しました"));
 		}
 
-		// サービスのステータスを明示的に RUNNING（実行中）に設定
-		SetServiceStatus(SERVICE_RUNNING);
 
 		return hr;
 	}
@@ -141,6 +143,7 @@ public :
 	{
 		// ここにサービス終了時に必要な後処理を書きます。
 		m_CasServer.CloseServer();
+		LogEvent(TEXT("BonCasServiceは正常に終了しました"));
 		
 		// 設定保存
 		TCHAR szValue[1024];
